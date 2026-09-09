@@ -1,0 +1,12 @@
+# Data & runtime artifacts (không cần commit)
+airflow/logs/*
+!airflow/logs/.gitkeep
+
+# Local env override (nếu bạn tách secret thật ra khỏi .env mẫu)
+.env.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.env
