@@ -263,6 +263,39 @@ services:
       - bigdata-network
 
   # ---------------------------------------------------------------------------
+  # COMPUTE - JupyterLab + PySpark (notebook để code PySpark tương tác)
+  #   - Build TRÊN image Spark của cụm -> Python/Spark/Scala khớp -> nối được
+  #     thẳng vào cụm standalone spark://spark-master:7077.
+  #   - UI: http://localhost:8888  (token = JUPYTER_TOKEN trong .env)
+  #   - Notebook lưu ở compute/jupyter/notebooks/ (bind-mount, không mất khi down).
+  #   - Lần đầu phải build image: `docker compose up -d --build jupyter`
+  # ---------------------------------------------------------------------------
+  jupyter:
+    build:
+      context: ./compute/jupyter
+    image: bigdata-cluster/jupyter-pyspark:3.5.0
+    container_name: jupyter
+    restart: unless-stopped
+    depends_on:
+      - spark-master
+    environment:
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-bigdata}
+    ports:
+      - "8888:8888"   # JupyterLab
+      - "4040:4040"   # Spark Application UI (chỉ sống khi có job chạy)
+    volumes:
+      - ./compute/jupyter/notebooks:/home/jovyan/work
+      - ./compute/spark/jobs:/opt/spark-jobs
+    networks:
+      - bigdata-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8888/api || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
   # COMPUTE - Flink (stream processing)
   # ---------------------------------------------------------------------------
   flink-jobmanager:

@@ -2,6 +2,10 @@
 airflow/logs/*
 !airflow/logs/.gitkeep
 
+# Jupyter
+.ipynb_checkpoints/
+compute/jupyter/notebooks/.ipynb_checkpoints/
+
 # Local env override (nếu bạn tách secret thật ra khỏi .env mẫu)
 .env.local
 

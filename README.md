@@ -8,6 +8,7 @@ Cụm xử lý dữ liệu lớn phân tán chạy bằng Docker Compose, gồm:
 | Lớp            | Công cụ                                   |
 |----------------|--------------------------------------------|
 | Compute        | Apache Spark (1 master + 2 worker)          |
+| Compute        | JupyterLab + PySpark (notebook tương tác)   |
 | Compute        | Apache Flink (1 jobmanager + 1 taskmanager) |
 | Hadoop         | HDFS (1 namenode + 2 datanode) + YARN (1 RM + 1 NM) |
 | Orchestration  | Apache Airflow (LocalExecutor)              |
@@ -25,6 +26,10 @@ Big_data/
 ├── compute/                 # Lớp compute
 │   ├── spark/
 │   │   └── jobs/            # Script PySpark/Spark job để ở đây
+│   ├── jupyter/
+│   │   ├── Dockerfile      # JupyterLab build trên image Spark của cụm
+│   │   ├── spark-defaults.conf
+│   │   └── notebooks/     # Notebook của bạn (bind-mount, được commit)
 │   └── flink/
 │       └── jobs/            # Job Flink (JAR/Python) để ở đây
 ├── hadoop/                  # Lớp Hadoop (HDFS + YARN)
@@ -166,6 +171,8 @@ docker volume rm bigdata-cluster_hadoop_namenode \
 |-------------------|------------------------------|-------------------------------|
 | Airflow           | http://localhost:8085        | admin / admin123              |
 | Spark Master UI   | http://localhost:8080        | -                              |
+| JupyterLab        | http://localhost:8888        | token: `bigdata` (`.env` `JUPYTER_TOKEN`) |
+| Spark App UI      | http://localhost:4040        | - (chỉ khi có job Spark chạy)   |
 | Flink UI          | http://localhost:8081        | -                              |
 | HDFS NameNode UI  | http://localhost:9870        | -                              |
 | HDFS DataNode #1  | http://localhost:9864        | -                              |
@@ -213,6 +220,15 @@ docker volume rm bigdata-cluster_hadoop_namenode \
   - Image `apache/nifi:1.28.1` ~1.8 GB, lần pull đầu khá lâu.
 - **Spark**: submit job từ container `spark-master`, xem ví dụ trong
   [compute/spark/jobs/example_job.py](compute/spark/jobs/example_job.py).
+- **JupyterLab + PySpark**: notebook để code PySpark tương tác, build trên chính
+  image Spark của cụm (Python/Spark/Scala khớp → nối thẳng vào `spark://spark-master:7077`).
+  ```bash
+  docker compose up -d --build jupyter     # lần đầu cần --build
+  ```
+  Mở http://localhost:8888 (token `bigdata`) → notebook mẫu
+  [compute/jupyter/notebooks/00-pyspark-quickstart.ipynb](compute/jupyter/notebooks/00-pyspark-quickstart.ipynb).
+  Notebook lưu ở `compute/jupyter/notebooks/`. `spark-defaults.conf` đã set sẵn
+  `spark.driver.host=jupyter` để executor kết nối ngược lại được.
 - **Flink**: copy JAR/script vào `compute/flink/jobs/`, submit qua UI (http://localhost:8081)
   hoặc `docker exec flink-jobmanager flink run /opt/flink/jobs/<job>.jar`.
 - **Airflow**: đặt DAG vào `orchestration/airflow/dags/`, scheduler sẽ tự nhận sau vài giây.

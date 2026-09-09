@@ -15,6 +15,7 @@ phần của cụm. Đọc [README.md](README.md) để hiểu tổng quan kiế
 | **Lưu trữ** | HDFS (`hadoop-namenode` + 2×`hadoop-datanode`) | Hệ thống file phân tán — lưu file lớn, chia block, nhân bản 2 bản |
 | **Tài nguyên** | YARN (`hadoop-resourcemanager` + `hadoop-nodemanager`) | Cấp phát CPU/RAM cho job (MapReduce, Spark-on-YARN...) |
 | **Tính toán** | Spark (`spark-master` + 2×`spark-worker`) | Xử lý dữ liệu lớn theo batch/micro-batch, nhanh hơn MapReduce |
+| **Notebook** | JupyterLab + PySpark (`jupyter`) | Code PySpark tương tác trên trình duyệt, nối vào cụm Spark |
 | **Streaming** | Kafka (`kafka`) + Kafka UI (`kafka-ui`) | Hàng đợi message real-time. Kafka không có UI sẵn nên có thêm `kafka-ui` |
 | **Ingestion** | NiFi (`nifi`) | Kéo–thả pipeline: hút / định tuyến / biến đổi dữ liệu giữa các hệ thống |
 
@@ -47,17 +48,19 @@ phần của cụm. Đọc [README.md](README.md) để hiểu tổng quan kiế
 ## 3. Bật cụm
 
 ```bash
-# Bật đúng 12 service: Hadoop + Kafka (+ Kafka UI) + Spark + NiFi
-docker compose up -d $(docker compose config --services | grep -E 'hadoop|kafka|spark|nifi')
+# Bật 13 service: Hadoop + Kafka (+ Kafka UI) + Spark + Jupyter + NiFi
+# --build vì service `jupyter` là image tự build (lần sau không cần --build nữa)
+docker compose up -d --build \
+  $(docker compose config --services | grep -E 'hadoop|kafka|spark|nifi|jupyter')
 
 # HOẶC gõ đầy đủ:
-docker compose up -d hadoop-namenode hadoop-datanode hadoop-datanode-2 \
+docker compose up -d --build hadoop-namenode hadoop-datanode hadoop-datanode-2 \
   hadoop-resourcemanager hadoop-nodemanager hadoop-historyserver \
-  kafka kafka-ui spark-master spark-worker-1 spark-worker-2 nifi
+  kafka kafka-ui spark-master spark-worker-1 spark-worker-2 jupyter nifi
 ```
 
-Lần đầu sẽ tải image (~15 GB) nên lâu. Nếu mạng nghẽn giữa chừng, **chạy lại lệnh
-trên** — image đã tải xong được giữ cache.
+Lần đầu sẽ tải image (~15 GB) + build image Jupyter nên lâu. Nếu mạng nghẽn giữa
+chừng, **chạy lại lệnh trên** — phần đã tải/build xong được giữ cache.
 
 **Đợi ~2–3 phút** rồi kiểm tra:
 
@@ -91,6 +94,9 @@ docker exec kafka kafka-broker-api-versions.sh --bootstrap-server localhost:9092
 # Kafka UI: HTTP 200
 curl -s -o /dev/null -w "Kafka UI %{http_code}\n" http://localhost:8090
 
+# JupyterLab: HTTP 200
+curl -s -o /dev/null -w "Jupyter %{http_code}\n" http://localhost:8888/api
+
 # NiFi: HTTP 200
 curl -sk -o /dev/null -w "NiFi %{http_code}\n" https://localhost:8443/nifi/
 ```
@@ -110,7 +116,8 @@ Mở bằng trình duyệt trên **chính máy chạy Docker**. Từ máy khác 
 | YARN NodeManager | http://localhost:8042 | |
 | YARN History Server | http://localhost:8188 | Log job đã chạy xong |
 | **Spark Master** | http://localhost:8080 | Worker, application, executor |
-| Spark Application UI | http://localhost:4040 | Chỉ sống khi có job chạy (cần map cổng 4040) |
+| **JupyterLab** | http://localhost:8888 | Token: `bigdata`. Code PySpark tương tác |
+| Spark Application UI | http://localhost:4040 | Chỉ sống khi có job Spark chạy (từ Jupyter hoặc spark-submit) |
 | **Kafka UI** | http://localhost:8090 | Kafka không có UI sẵn — tool ngoài. Xem topic, message, consumer group |
 | **NiFi** | https://localhost:8443/nifi | **https**, login `admin` / `nifiadmin12345` |
 
@@ -240,6 +247,39 @@ Từ code **ngoài Docker** (trên máy host) thì bootstrap server là `localho
 
 Thư mục `streaming/nifi/data/` (host) = `/data` (trong container NiFi).
 
+### 6.6. JupyterLab — code PySpark tương tác
+
+1. Mở http://localhost:8888 → nhập token **`bigdata`** (hoặc mở thẳng
+   `http://localhost:8888/lab?token=bigdata`).
+2. Mở sẵn notebook mẫu **`00-pyspark-quickstart.ipynb`** trong panel bên trái,
+   hoặc tạo notebook mới (*File → New → Notebook*, chọn kernel *Python 3*).
+3. Ô đầu tiên — tạo SparkSession **nối vào cụm**:
+   ```python
+   from pyspark.sql import SparkSession
+   spark = (SparkSession.builder
+       .appName("notebook-cua-toi")
+       .master("spark://spark-master:7077")   # bỏ dòng này -> chạy local[*]
+       .getOrCreate())
+   spark
+   ```
+4. Ô tiếp theo — thử tính toán (job chạy trên 2 spark-worker):
+   ```python
+   df = spark.range(1_000_000)
+   print(df.filter("id % 3 = 0").count())
+   df.write.mode("overwrite").parquet("/user/jupyter/demo")   # ghi xuống HDFS
+   ```
+5. Trong lúc chạy, mở **http://localhost:8080** (Spark Master) thấy app
+   `notebook-cua-toi` đang `RUNNING`; **http://localhost:4040** là Spark UI của app.
+
+**Ghi chú:**
+- Notebook lưu ở `compute/jupyter/notebooks/` trên host → không mất khi
+  `docker compose down`, và được commit vào git.
+- Image Jupyter build trên **chính image Spark của cụm** nên Python 3.9 + Spark
+  3.5.0 khớp — không lỗi "Python version mismatch" khi chạy chế độ cụm.
+- `spark-defaults.conf` đã set sẵn `spark.driver.host=jupyter`,
+  `spark.cores.max=2`, `fs.defaultFS=hdfs://hadoop-namenode:9000`.
+- Sửa `Dockerfile` (thêm thư viện) → `docker compose up -d --build jupyter`.
+
 ---
 
 ## 7. Các service gọi nhau bằng tên gì?
@@ -252,9 +292,11 @@ Bên trong mạng Docker (`bigdata-network`), dùng **tên service** làm hostna
 | Spark master | `spark://spark-master:7077` | `spark://localhost:7077` |
 | Kafka | `kafka:9092` | `localhost:9094` |
 | YARN RM | `hadoop-resourcemanager:8032` | — |
+| Jupyter (driver Spark) | `jupyter` (đã set trong `spark-defaults.conf`) | — |
 
 Ví dụ: processor trong NiFi muốn đẩy dữ liệu vào Kafka thì điền broker là
-`kafka:9092` (không phải `localhost`).
+`kafka:9092` (không phải `localhost`). Notebook Jupyter kết nối cụm bằng
+`spark://spark-master:7077`.
 
 ---
 
@@ -292,6 +334,9 @@ docker stats --no-stream
 | "Live datanodes (0)" | Đợi thêm 1–2 phút; hoặc datanode chết — `docker compose restart hadoop-datanode hadoop-datanode-2`. |
 | Máy lag, hết RAM | Tăng RAM cho Docker Desktop, hoặc tắt bớt: `docker compose stop nifi` (NiFi nặng nhất ~1.2 GB). |
 | Job Spark/YARN treo ở `ACCEPTED` | YARN hết RAM (chỉ có 4 GB cho job). Đợi job khác xong, hoặc giảm `--executor-memory`. |
+| Jupyter: `docker compose up` cần build | Service `jupyter` là image tự build → lần đầu chạy `docker compose up -d --build jupyter`. |
+| Notebook Spark treo mãi ở `.getOrCreate()` | Cụm Spark chưa lên (`docker compose ps` xem `spark-master`), hoặc job trước chưa `spark.stop()` đang giữ hết core. Restart kernel. |
+| Notebook: `Python in worker has different version` | Không xảy ra với image này (đã khớp 3.9). Nếu tự đổi image Jupyter thì phải khớp Python với `custom/spark:3.5.0`. |
 
 ---
 
