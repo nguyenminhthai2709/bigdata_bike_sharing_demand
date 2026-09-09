@@ -1,7 +1,12 @@
-# JupyterLab + PySpark, build TRÊN CHÍNH image Spark của cụm (custom/spark:3.5.0)
-# => Python 3.9 + Spark 3.5.0 + Scala 2.12 khớp 100% với spark-master/worker
-#    nên notebook nối thẳng vào cụm standalone spark://spark-master:7077 chạy được.
-FROM custom/spark:3.5.0
+# JupyterLab + PySpark, build TRÊN CHÍNH image Spark của cụm.
+# => Python + Spark + Scala khớp 100% với spark-master/worker nên notebook nối
+#    thẳng vào cụm standalone spark://spark-master:7077 chạy được (không lỗi
+#    "Python in worker has different version").
+#
+# SPARK_BASE_IMAGE lấy từ biến SPARK_IMAGE trong .env (xem build.args ở
+# docker-compose.yml). Mặc định: bitnamilegacy/spark:3.5 (pull được từ Docker Hub).
+ARG SPARK_BASE_IMAGE=bitnamilegacy/spark:3.5
+FROM ${SPARK_BASE_IMAGE}
 
 USER root
 
@@ -14,12 +19,14 @@ RUN pip3 install --no-cache-dir \
       pyarrow==16.1.0 \
       matplotlib==3.9.2
 
-# Dùng pyspark có sẵn trong image (không cài lại qua pip cho nhẹ).
-ENV PYTHONPATH=/opt/bitnami/spark/python:/opt/bitnami/spark/python/lib/py4j-0.10.9.7-src.zip
+# Dùng pyspark có sẵn trong image Spark (không cài lại qua pip cho nhẹ).
+# Tạo symlink py4j để PYTHONPATH không phụ thuộc số version py4j cụ thể.
+RUN ln -sf "$(ls /opt/bitnami/spark/python/lib/py4j-*-src.zip | head -1)" /opt/py4j-src.zip
+ENV PYTHONPATH=/opt/bitnami/spark/python:/opt/py4j-src.zip
 ENV PYSPARK_PYTHON=python3
 ENV PYSPARK_DRIVER_PYTHON=python3
 
-# spark-defaults: cấu hình để executor kết nối ngược lại được driver (notebook).
+# spark-defaults: để executor kết nối ngược lại được driver (notebook).
 COPY spark-defaults.conf /opt/bitnami/spark/conf/spark-defaults.conf
 
 RUN mkdir -p /home/jovyan/work && chmod -R 777 /home/jovyan

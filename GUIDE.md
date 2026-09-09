@@ -3,8 +3,11 @@
 Tài liệu này hướng dẫn **từng bước** cách bật, kiểm tra và dùng thử từng thành
 phần của cụm. Đọc [README.md](README.md) để hiểu tổng quan kiến trúc trước.
 
-> Mọi lệnh chạy trong thư mục gốc dự án (`d:\Big_data`), bằng **PowerShell** hoặc
-> **Git Bash** trên Windows.
+> **Quy ước lệnh trong tài liệu này**
+> - Mọi lệnh chạy **trong thư mục gốc dự án** (nơi có file `docker-compose.yml`).
+> - Có 2 kiểu terminal trên Windows: **PowerShell** (mặc định) và **Git Bash**.
+>   Chỗ nào lệnh khác nhau sẽ ghi rõ. Nếu chỉ có 1 ô code thì lệnh chạy được ở cả hai.
+> - Người mới **nên dùng PowerShell** cho đơn giản.
 
 ---
 
@@ -33,46 +36,91 @@ phần của cụm. Đọc [README.md](README.md) để hiểu tổng quan kiế
 
 ---
 
-## 2. Chuẩn bị
+## 2. Chuẩn bị (làm 1 lần)
 
-1. Cài **Docker Desktop** (Windows/Mac), mở lên, đợi biểu tượng cá voi hết quay.
-2. Docker Desktop → **Settings → Resources**: để RAM ít nhất **6 GB** (cụm này
-   idle tốn ~4 GB, chạy job sẽ hơn).
-3. Kiểm tra Docker sẵn sàng:
+### 2.1. Cài Docker Desktop
+
+1. Tải **Docker Desktop**: https://www.docker.com/products/docker-desktop/
+2. **Windows**: khi cài để **bật WSL 2** (bảng cài có sẵn tick — cứ để nguyên).
+   Nếu máy báo thiếu WSL: mở PowerShell **Administrator** chạy `wsl --install`
+   rồi khởi động lại máy.
+3. Mở Docker Desktop, đợi icon con cá voi ở góc dưới **hết quay / màu xanh**.
+4. Docker Desktop → **Settings → Resources**:
+   - **Memory** ≥ **6 GB** (khuyến nghị 8 GB — cụm idle ~4 GB, chạy job cần hơn)
+   - **Disk** còn trống ≥ **30 GB** (image tải về ~15–20 GB)
+5. Kiểm tra trong terminal:
    ```bash
-   docker version        # in ra Client + Server => OK
+   docker version        # in ra CẢ "Client" và "Server" => OK
+   docker compose version # in ra v2.x => OK
    ```
+   Nếu "Server" báo lỗi → Docker Desktop chưa chạy xong, đợi thêm.
+
+### 2.2. Lấy code về máy
+
+```bash
+git clone <URL-repo> big-data
+cd big-data
+```
+(Không có git thì tải file ZIP của repo rồi giải nén, mở terminal trong thư mục đó.)
+
+### 2.3. Tạo file `.env`
+
+Repo **không kèm sẵn** `.env` (chứa cấu hình + mật khẩu). Tạo từ file mẫu:
+
+```powershell
+# PowerShell
+Copy-Item .env.example .env
+```
+```bash
+# Git Bash / Linux / Mac
+cp .env.example .env
+```
+
+Giá trị mặc định trong `.env.example` **dùng chạy local được ngay**, không cần sửa.
+(Muốn đổi mật khẩu NiFi/Postgres thì sửa `.env` rồi mới `up`.)
 
 ---
 
 ## 3. Bật cụm
 
-```bash
-# Bật 13 service: Hadoop + Kafka (+ Kafka UI) + Spark + Jupyter + NiFi
-# --build vì service `jupyter` là image tự build (lần sau không cần --build nữa)
-docker compose up -d --build \
-  $(docker compose config --services | grep -E 'hadoop|kafka|spark|nifi|jupyter')
+Cụm đầy đủ có 18 service. Hướng dẫn này bật **13 service** cần cho HDFS + YARN +
+Spark + Jupyter + Kafka + NiFi (bỏ Flink / Airflow / MinIO / Postgres).
 
-# HOẶC gõ đầy đủ:
-docker compose up -d --build hadoop-namenode hadoop-datanode hadoop-datanode-2 \
-  hadoop-resourcemanager hadoop-nodemanager hadoop-historyserver \
+### PowerShell (khuyến nghị cho Windows)
+
+```powershell
+docker compose up -d --build `
+  hadoop-namenode hadoop-datanode hadoop-datanode-2 `
+  hadoop-resourcemanager hadoop-nodemanager hadoop-historyserver `
   kafka kafka-ui spark-master spark-worker-1 spark-worker-2 jupyter nifi
 ```
 
-Lần đầu sẽ tải image (~15 GB) + build image Jupyter nên lâu. Nếu mạng nghẽn giữa
-chừng, **chạy lại lệnh trên** — phần đã tải/build xong được giữ cache.
+### Git Bash / Linux / Mac
 
-**Đợi ~2–3 phút** rồi kiểm tra:
+```bash
+docker compose up -d --build \
+  $(docker compose config --services | grep -E 'hadoop|kafka|spark|nifi|jupyter')
+```
+
+> `--build` để build image Jupyter (chạy lần đầu). Các lần sau chỉ cần
+> `docker compose up -d <danh sách service>` (không `--build`).
+
+**Lần đầu chạy rất lâu** (10–40 phút tùy mạng): tải ~15–20 GB image + build Jupyter.
+Nếu mạng nghẽn báo lỗi `pull ... timeout` giữa chừng → **chạy lại đúng lệnh trên**,
+phần đã tải xong được giữ, nó chạy tiếp từ chỗ dở.
+
+### Đợi cụm sẵn sàng
 
 ```bash
 docker compose ps
 ```
 
-Cột `STATUS` của Hadoop/Kafka/NiFi phải là **`(healthy)`**. `spark-master` /
-`spark-worker` không có healthcheck nên chỉ hiện `Up` là bình thường.
+Chạy lại lệnh này vài lần trong ~2–3 phút tới khi:
+- Hadoop / Kafka / NiFi / Jupyter: cột `STATUS` = **`(healthy)`**
+- `spark-master`, `spark-worker-1/2`: chỉ hiện **`Up`** (không có healthcheck) — bình thường
 
-> `hadoop-resourcemanager` có thể `Restarting` vài lần lúc đầu (đợi namenode) —
-> bình thường, sẽ tự ổn định.
+> `hadoop-resourcemanager` có thể `Restarting` 1–2 lần lúc đầu (đang đợi namenode) —
+> bình thường, tự ổn định sau ~1 phút.
 
 ---
 
@@ -172,21 +220,11 @@ docker exec spark-master bash -c \
 
 Kết quả: `Pi is roughly 3.14...`. Mở http://localhost:8080 xem app vừa chạy.
 
-**b) Job PySpark của bạn — ghi kết quả xuống HDFS:**
+**b) Job PySpark ghi kết quả xuống HDFS:**
 
-Tạo file `compute/spark/jobs/hello_hdfs.py`:
-
-```python
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.appName("hello-hdfs").getOrCreate()
-df = spark.createDataFrame([("alice", 1), ("bob", 2), ("carol", 3)], ["name", "value"])
-df.show()
-df.write.mode("overwrite").csv("hdfs://hadoop-namenode:9000/user/demo/spark_out")
-spark.stop()
-```
-
-Thư mục `compute/spark/jobs/` đã được mount sẵn vào container tại `/opt/spark-jobs`:
+File [compute/spark/jobs/hello_hdfs.py](compute/spark/jobs/hello_hdfs.py) đã có sẵn
+trong repo (nội dung: tạo DataFrame 3 dòng → ghi CSV xuống `/user/demo/spark_out`).
+Thư mục `compute/spark/jobs/` được mount vào container tại `/opt/spark-jobs`:
 
 ```bash
 docker exec spark-master bash -c \
@@ -251,8 +289,10 @@ Thư mục `streaming/nifi/data/` (host) = `/data` (trong container NiFi).
 
 1. Mở http://localhost:8888 → nhập token **`bigdata`** (hoặc mở thẳng
    `http://localhost:8888/lab?token=bigdata`).
-2. Mở sẵn notebook mẫu **`00-pyspark-quickstart.ipynb`** trong panel bên trái,
-   hoặc tạo notebook mới (*File → New → Notebook*, chọn kernel *Python 3*).
+2. Panel bên trái có sẵn 2 notebook mẫu (đọc + chạy từng ô):
+   - **`00-pyspark-quickstart.ipynb`** — DataFrame, HDFS, Kafka cơ bản
+   - **`01-luu-bang-len-hdfs.ipynb`** — tạo 1 bảng rồi lưu Parquet/CSV lên HDFS, đọc lại
+   Hoặc tạo notebook mới: *File → New → Notebook*, kernel *Python 3*.
 3. Ô đầu tiên — tạo SparkSession **nối vào cụm**:
    ```python
    from pyspark.sql import SparkSession
@@ -303,18 +343,21 @@ Ví dụ: processor trong NiFi muốn đẩy dữ liệu vào Kafka thì điền
 ## 8. Tắt / bật lại / dọn dẹp
 
 ```bash
-# Dừng tạm (giữ container + dữ liệu) — bật lại nhanh
+# Dừng tạm 13 service đang chạy (giữ container + dữ liệu) — bật lại nhanh
 docker compose stop
 
-# Bật lại sau khi stop (không tải lại image)
+# Bật lại sau khi stop (KHÔNG tải/build lại)
 docker compose start
 
-# Xoá container nhưng GIỮ dữ liệu (volume)
+# Xoá container nhưng GIỮ dữ liệu (volume). Bật lại: chạy lệnh ở mục 3.
 docker compose down
 
-# Xoá SẠCH cả dữ liệu (HDFS, flow NiFi, Kafka... về trắng)
+# Xoá SẠCH cả dữ liệu (HDFS, flow NiFi, Kafka, notebook output... về trắng)
 docker compose down -v
 ```
+
+> Sau `docker compose down`, muốn bật lại thì chạy đúng lệnh `up` ở **mục 3**
+> (lần này nhanh vì image đã có sẵn, không cần tải lại).
 
 Xem cụm đang ăn bao nhiêu RAM:
 ```bash
@@ -327,7 +370,11 @@ docker stats --no-stream
 
 | Triệu chứng | Cách xử lý |
 |-------------|------------|
-| `docker compose up` báo `image ... not found` | Bitnami đã gỡ vài image — `.env` đã trỏ sang bản `bitnamilegacy` / `custom`. Chạy lại lệnh up. |
+| `docker compose` báo thiếu biến / `NIFI_PASSWORD phải >= 12 ký tự` / `KAFKA_CLUSTER_ID` rỗng | Chưa tạo `.env`. Chạy `Copy-Item .env.example .env` (PowerShell) hoặc `cp .env.example .env`. |
+| `pull access denied` / `manifest unknown` cho `custom/spark:3.5.0` | Image đó chỉ có trên máy gốc. Trong `.env` đổi `SPARK_IMAGE=bitnamilegacy/spark:3.5` rồi `docker compose up -d --build`. |
+| `docker compose up` báo `image ... not found` (kafka/spark bitnami) | `.env` đã trỏ sang bản `bitnamilegacy`. Chạy lại lệnh up (mạng có thể vừa nghẽn). |
+| Lệnh có `$(...)` báo lỗi trong PowerShell | Đó là cú pháp Git Bash. Dùng ô lệnh **PowerShell** ở mục 3, hoặc mở Git Bash. |
+| `docker version` không có phần "Server" | Docker Desktop chưa khởi động xong. Mở Docker Desktop, đợi icon cá voi hết quay. |
 | Container cứ `Restarting` | Xem log: `docker logs <tên-container>`. RM/NM restart lúc đầu là bình thường. |
 | NiFi mở không được | Phải là `https://localhost:8443/nifi`; qua cảnh báo cert (`thisisunsafe`). |
 | Spark UI (8080) trắng trang | Đang gõ `https://` → đổi thành `http://`. |

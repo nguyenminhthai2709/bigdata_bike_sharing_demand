@@ -273,7 +273,10 @@ services:
   jupyter:
     build:
       context: ./compute/jupyter
-    image: bigdata-cluster/jupyter-pyspark:3.5.0
+      args:
+        # Jupyter build trên đúng image Spark của cụm -> Python luôn khớp worker.
+        SPARK_BASE_IMAGE: ${SPARK_IMAGE:-bitnamilegacy/spark:3.5}
+    image: bigdata-cluster/jupyter-pyspark:3.5
     container_name: jupyter
     restart: unless-stopped
     depends_on:

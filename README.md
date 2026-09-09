@@ -70,6 +70,12 @@ Big_data/
 
 ## Khởi chạy
 
+> Người mới xem [GUIDE.md](GUIDE.md) — hướng dẫn cài Docker, lấy code, tạo `.env`,
+> bật cụm từng bước (có lệnh PowerShell riêng).
+
+**Tạo `.env` trước** (repo không kèm sẵn): `cp .env.example .env`
+(PowerShell: `Copy-Item .env.example .env`). Giá trị mẫu chạy local được ngay.
+
 ### Chạy toàn bộ cụm phân tán
 
 ```bash
