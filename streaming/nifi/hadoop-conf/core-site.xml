@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cấu hình client HDFS tối thiểu cho NiFi (processor PutHDFS/GetHDFS/ListHDFS).
+  Phải khớp với CORE_CONF_fs_defaultFS trong hadoop/hadoop.env.
+-->
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://hadoop-namenode:9000</value>
+  </property>
+</configuration>

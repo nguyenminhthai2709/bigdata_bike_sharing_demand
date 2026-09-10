@@ -195,6 +195,8 @@ services:
       - nifi_provenance:/opt/nifi/nifi-current/provenance_repository
       # Thư mục trao đổi file với host (dùng cho processor GetFile / PutFile khi tập).
       - ./streaming/nifi/data:/data
+      # core-site.xml / hdfs-site.xml để processor PutHDFS/GetHDFS kết nối được HDFS.
+      - ./streaming/nifi/hadoop-conf:/opt/nifi/hadoop-conf:ro
     networks:
       - bigdata-network
     healthcheck:
@@ -367,37 +369,65 @@ services:
       timeout: 5s
       retries: 15
 
+  # NOTE về hostname datanode:
+  #   Image bde2020 bật sẵn dfs.client/datanode.use.datanode.hostname=true -> mọi kết nối
+  #   tới DataNode đều qua HOSTNAME. WebHDFS (nút Upload/Download trên NameNode UI) cũng
+  #   redirect trình duyệt tới DataNode bằng hostname này.
+  #   -> Đặt hostname cố định "slave01"/"slave02" (thay cho container-id ngẫu nhiên) và
+  #      publish cổng HTTP DataNode 1:1 ra host.
+  #   -> Trên MÁY HOST thêm vào C:\Windows\System32\drivers\etc\hosts:
+  #          127.0.0.1 slave01
+  #          127.0.0.1 slave02
+  #      để trình duyệt theo được redirect. Bên trong docker "slave01/02" tự resolve ra
+  #      IP thật của datanode (network alias) nên pipeline ghi dữ liệu vẫn chạy bình thường.
   hadoop-datanode:
     image: bde2020/hadoop-datanode:${HADOOP_IMAGE_TAG:-2.0.0-hadoop3.2.1-java8}
     container_name: hadoop-datanode
+    hostname: slave01
     restart: unless-stopped
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9870"
+      HDFS_CONF_dfs_datanode_hostname: slave01
     env_file:
       - ./hadoop/hadoop.env
     ports:
-      - "9864:9864"   # DataNode Web UI
+      - "9864:9864"   # DataNode Web UI + WebHDFS HTTP (redirect -> slave01:9864)
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
     networks:
-      - bigdata-network
+      bigdata-network:
+        aliases:
+          - slave01
     depends_on:
       - hadoop-namenode
 
   hadoop-datanode-2:
     image: bde2020/hadoop-datanode:${HADOOP_IMAGE_TAG:-2.0.0-hadoop3.2.1-java8}
     container_name: hadoop-datanode-2
+    hostname: slave02
     restart: unless-stopped
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9870"
+      HDFS_CONF_dfs_datanode_hostname: slave02
+      # Cổng HTTP nội bộ đổi sang 9865 để publish 1:1 ra host -> redirect "slave02:9865"
+      # (không đụng cổng 9864 của datanode #1).
+      HDFS_CONF_dfs_datanode_http_address: 0.0.0.0:9865
     env_file:
       - ./hadoop/hadoop.env
     ports:
-      - "9865:9864"   # DataNode Web UI (host 9865 vì 9864 đã cấp cho datanode #1)
+      - "9865:9865"   # DataNode Web UI + WebHDFS HTTP (redirect -> slave02:9865)
     volumes:
       - hadoop_datanode_2:/hadoop/dfs/data
     networks:
-      - bigdata-network
+      bigdata-network:
+        aliases:
+          - slave02
+    # Healthcheck sẵn trong image bde2020 kiểm cổng 9864 -> đổi sang 9865 cho khớp.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9865/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
     depends_on:
       - hadoop-namenode
 
