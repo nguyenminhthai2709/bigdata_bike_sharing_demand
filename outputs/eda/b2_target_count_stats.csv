@@ -1,0 +1,2 @@
+total_records,total_rentals,mean,stddev,min,p10,p25,median,p75,p90,p99,max,skewness,kurtosis
+10886,2085476,191.57,181.14,1,9,42,145,284,452,774,977,1.2419,1.2989

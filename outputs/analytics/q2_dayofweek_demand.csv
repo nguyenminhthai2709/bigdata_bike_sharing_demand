@@ -1,0 +1,8 @@
+dayofweek,day_name,is_weekend,total_records,total_rentals,avg_total_demand,avg_casual,avg_registered
+1,Sunday,1,1579,285546,180.84,57.05,123.79
+2,Monday,0,1551,295296,190.39,29.84,160.55
+3,Tuesday,0,1539,291985,189.72,22.98,166.74
+4,Wednesday,0,1551,292226,188.41,22.52,165.89
+5,Thursday,0,1553,306401,197.3,24.01,173.29
+6,Friday,0,1529,302504,197.84,31.0,166.84
+7,Saturday,1,1584,311518,196.67,63.63,133.04

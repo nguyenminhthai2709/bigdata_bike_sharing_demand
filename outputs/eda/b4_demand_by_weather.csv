@@ -1,0 +1,5 @@
+weather,weather_desc,records,avg_count,avg_casual,avg_registered
+1,Clear / Partly Cloudy,7192,205.24,40.31,164.93
+2,Mist / Cloudy,2834,178.96,30.79,148.17
+3,Light Snow / Light Rain,859,118.85,17.44,101.4
+4,Heavy Rain / Ice Pellets,1,164.0,6.0,158.0

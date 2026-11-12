@@ -1,0 +1,11 @@
+hour,day_category,total_records,avg_total_demand,max_demand_recorded,avg_casual,avg_registered
+17,Working Day,311,529.21,970,56.51,472.7
+18,Working Day,311,495.49,977,49.41,446.07
+8,Working Day,310,479.95,839,22.05,457.9
+13,Non-Working Day,145,387.82,729,142.36,245.46
+12,Non-Working Day,145,379.11,757,129.79,249.32
+14,Non-Working Day,145,378.73,730,145.03,233.7
+15,Non-Working Day,145,373.7,724,142.19,231.51
+16,Non-Working Day,145,367.65,783,133.72,233.93
+19,Working Day,311,349.28,743,40.46,308.83
+17,Non-Working Day,145,339.12,729,116.05,223.08

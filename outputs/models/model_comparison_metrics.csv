@@ -1,0 +1,4 @@
+model_key,model_name,rmse,mae,r2,rmse_clipped,rmsle,negative_predictions_count,training_time_sec,params_json
+linear_regression,Linear Regression,164.4157,121.8134,0.4291,164.4157,1.094,0,10.5608,"{""scaler"": ""StandardScaler(withMean=True, withStd=True)"", ""maxIter"": 100, ""regParam"": 0.1, ""elasticNetParam"": 0.0}"
+decision_tree,Decision Tree Regressor,100.7967,65.1976,0.7854,100.7967,0.4382,0,18.7804,"{""maxDepth"": 8, ""minInstancesPerNode"": 5, ""seed"": 42}"
+random_forest,Random Forest Regressor,99.1848,66.3189,0.7922,99.1848,0.4016,0,34.3088,"{""numTrees"": 30, ""maxDepth"": 8, ""minInstancesPerNode"": 5, ""featureSubsetStrategy"": ""auto"", ""subsamplingRate"": 0.8, ""seed"": 42}"

@@ -1,0 +1,47 @@
+{
+  "train_rows": 10886,
+  "train_cols": 12,
+  "test_rows": 6493,
+  "test_cols": 9,
+  "null_counts": {
+    "datetime": 0,
+    "season": 0,
+    "holiday": 0,
+    "workingday": 0,
+    "weather": 0,
+    "temp": 0,
+    "atemp": 0,
+    "humidity": 0,
+    "windspeed": 0,
+    "casual": 0,
+    "registered": 0,
+    "count": 0
+  },
+  "duplicate_rows": 0,
+  "duplicate_timestamps": 0,
+  "anomalies": {
+    "negative_count": 0,
+    "count_mismatch_casual_plus_registered": 0,
+    "humidity_zero_records": 22,
+    "windspeed_zero_records": 1313,
+    "weather_category_4_extreme": 1,
+    "temp_atemp_large_gap_gt_10C": 24,
+    "count_iqr_upper_outliers_gt_647": 300
+  },
+  "target_count_summary": {
+    "total_records": 10886,
+    "total_rentals": 2085476,
+    "mean": 191.57,
+    "stddev": 181.14,
+    "min": 1,
+    "p10": 9,
+    "p25": 42,
+    "median": 145,
+    "p75": 284,
+    "p90": 452,
+    "p99": 774,
+    "max": 977,
+    "skewness": 1.2419,
+    "kurtosis": 1.2989
+  }
+}

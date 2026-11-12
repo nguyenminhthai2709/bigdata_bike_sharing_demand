@@ -1,0 +1,160 @@
+{
+  "best_model_key": "random_forest",
+  "best_model_name": "Random Forest Regressor",
+  "hdfs_model_path": "hdfs://hadoop-namenode:9000/bike-sharing/models/best_model/pipeline_model",
+  "target_column": "count",
+  "feature_columns": [
+    "season",
+    "holiday",
+    "workingday",
+    "weather",
+    "temp",
+    "atemp",
+    "humidity",
+    "windspeed",
+    "year",
+    "month",
+    "day",
+    "hour",
+    "dayofweek",
+    "is_weekend",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos"
+  ],
+  "excluded_leakage_columns": [
+    "casual",
+    "registered"
+  ],
+  "excluded_non_feature_columns": [
+    "datetime"
+  ],
+  "time_based_split": {
+    "train_ratio": 0.8,
+    "validation_ratio": 0.2,
+    "train_rows": 8708,
+    "validation_rows": 2178,
+    "train_start": "2011-01-01 00:00:00",
+    "train_end": "2012-08-05 04:00:00",
+    "validation_start": "2012-08-05 05:00:00",
+    "validation_end": "2012-12-19 23:00:00"
+  },
+  "baseline_mean_predictor": {
+    "train_mean_count": 174.3912,
+    "rmse": 233.9322,
+    "mae": 176.5815,
+    "r2": -0.1558
+  },
+  "best_model_params": {
+    "numTrees": 30,
+    "maxDepth": 8,
+    "minInstancesPerNode": 5,
+    "featureSubsetStrategy": "auto",
+    "subsamplingRate": 0.8,
+    "seed": 42
+  },
+  "best_model_validation_metrics": {
+    "model_key": "random_forest",
+    "model_name": "Random Forest Regressor",
+    "rmse": 99.1848,
+    "mae": 66.3189,
+    "r2": 0.7922,
+    "rmse_clipped": 99.1848,
+    "rmsle": 0.4016,
+    "negative_predictions_count": 0,
+    "training_time_sec": 34.3088,
+    "params_json": "{\"numTrees\": 30, \"maxDepth\": 8, \"minInstancesPerNode\": 5, \"featureSubsetStrategy\": \"auto\", \"subsamplingRate\": 0.8, \"seed\": 42}"
+  },
+  "all_models_comparison": [
+    {
+      "model_key": "linear_regression",
+      "model_name": "Linear Regression",
+      "rmse": 164.4157,
+      "mae": 121.8134,
+      "r2": 0.4291,
+      "rmse_clipped": 164.4157,
+      "rmsle": 1.094,
+      "negative_predictions_count": 0,
+      "training_time_sec": 10.5608,
+      "params_json": "{\"scaler\": \"StandardScaler(withMean=True, withStd=True)\", \"maxIter\": 100, \"regParam\": 0.1, \"elasticNetParam\": 0.0}"
+    },
+    {
+      "model_key": "decision_tree",
+      "model_name": "Decision Tree Regressor",
+      "rmse": 100.7967,
+      "mae": 65.1976,
+      "r2": 0.7854,
+      "rmse_clipped": 100.7967,
+      "rmsle": 0.4382,
+      "negative_predictions_count": 0,
+      "training_time_sec": 18.7804,
+      "params_json": "{\"maxDepth\": 8, \"minInstancesPerNode\": 5, \"seed\": 42}"
+    },
+    {
+      "model_key": "random_forest",
+      "model_name": "Random Forest Regressor",
+      "rmse": 99.1848,
+      "mae": 66.3189,
+      "r2": 0.7922,
+      "rmse_clipped": 99.1848,
+      "rmsle": 0.4016,
+      "negative_predictions_count": 0,
+      "training_time_sec": 34.3088,
+      "params_json": "{\"numTrees\": 30, \"maxDepth\": 8, \"minInstancesPerNode\": 5, \"featureSubsetStrategy\": \"auto\", \"subsamplingRate\": 0.8, \"seed\": 42}"
+    }
+  ],
+  "top_feature_importances": [
+    {
+      "feature": "hour",
+      "dt_importance": 0.49725,
+      "rf_importance": 0.304528
+    },
+    {
+      "feature": "hour_sin",
+      "dt_importance": 0.1314,
+      "rf_importance": 0.180155
+    },
+    {
+      "feature": "hour_cos",
+      "dt_importance": 0.027149,
+      "rf_importance": 0.111465
+    },
+    {
+      "feature": "atemp",
+      "dt_importance": 0.003427,
+      "rf_importance": 0.08958
+    },
+    {
+      "feature": "year",
+      "dt_importance": 0.079265,
+      "rf_importance": 0.07703
+    },
+    {
+      "feature": "temp",
+      "dt_importance": 0.15392,
+      "rf_importance": 0.073504
+    },
+    {
+      "feature": "workingday",
+      "dt_importance": 0.048186,
+      "rf_importance": 0.033424
+    },
+    {
+      "feature": "humidity",
+      "dt_importance": 0.014425,
+      "rf_importance": 0.025871
+    },
+    {
+      "feature": "is_weekend",
+      "dt_importance": 0.012696,
+      "rf_importance": 0.025837
+    },
+    {
+      "feature": "season",
+      "dt_importance": 0.001172,
+      "rf_importance": 0.020434
+    }
+  ],
+  "created_at_utc": "2026-11-11T08:29:45Z"
+}

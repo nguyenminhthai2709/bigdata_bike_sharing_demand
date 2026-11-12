@@ -1,0 +1,5 @@
+season,season_name,records,total_rentals,avg_count,std_count,avg_temp
+1,Spring,2686,312498,116.34,125.27,12.53
+2,Summer,2733,588282,215.25,192.01,22.82
+3,Fall,2733,640662,234.42,197.15,28.79
+4,Winter,2734,544034,198.99,177.62,16.65

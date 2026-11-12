@@ -1,0 +1,5 @@
+scale_label,scale_factor,num_rows,num_columns,hdfs_path,parquet_size_bytes,parquet_size_mb,default_partitions,generation_time_sec,mean_count,std_count,mean_temp,seed,method
+1x,1,10886,20,hdfs://hadoop-namenode:9000/bike-sharing/benchmark/data/scale_1x,124620,0.1188,1,12.1846,191.5741,181.1445,20.2309,42,Original 1x dataset
+10x,10,108860,20,hdfs://hadoop-namenode:9000/bike-sharing/benchmark/data/scale_10x,1782847,1.7003,1,24.6025,191.5741,181.137,20.2305,42,"Controlled replication via crossJoin(range(scale)) with +730d*replica_id timestamp shift and N(0, 0.05^2) jitter (seed=42)"
+50x,50,544300,20,hdfs://hadoop-namenode:9000/bike-sharing/benchmark/data/scale_50x,5969100,5.6926,2,21.5147,191.5741,181.1363,20.2307,42,"Controlled replication via crossJoin(range(scale)) with +730d*replica_id timestamp shift and N(0, 0.05^2) jitter (seed=42)"
+100x,100,1088600,20,hdfs://hadoop-namenode:9000/bike-sharing/benchmark/data/scale_100x,10854832,10.352,2,22.7906,191.5741,181.1362,20.2308,42,"Controlled replication via crossJoin(range(scale)) with +730d*replica_id timestamp shift and N(0, 0.05^2) jitter (seed=42)"

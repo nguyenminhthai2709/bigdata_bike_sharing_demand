@@ -1,0 +1,25 @@
+scale_label,scale_factor,num_rows,format,run_index,cache_regime,storage_size_bytes,storage_size_mb,write_time_sec,read_count_time_sec,read_agg_time_sec
+1x,1,10886,CSV,1,Spark-Uncached / Warm OS Page Cache,1119850,1.068,2.431,1.3889,2.6385
+1x,1,10886,CSV,2,Spark-Uncached / Warm OS Page Cache,1119850,1.068,1.6798,0.6699,1.1266
+1x,1,10886,CSV,3,Spark-Uncached / Warm OS Page Cache,1119850,1.068,1.9613,0.6975,0.8731
+1x,1,10886,PARQUET,1,Spark-Uncached / Warm OS Page Cache,190915,0.1821,3.5377,1.1252,1.8923
+1x,1,10886,PARQUET,2,Spark-Uncached / Warm OS Page Cache,190915,0.1821,0.8959,0.4506,0.543
+1x,1,10886,PARQUET,3,Spark-Uncached / Warm OS Page Cache,190915,0.1821,1.9395,0.3939,0.5438
+10x,10,108860,CSV,1,Spark-Uncached / Warm OS Page Cache,11542166,11.0075,1.4326,0.3323,0.6756
+10x,10,108860,CSV,2,Spark-Uncached / Warm OS Page Cache,11542166,11.0075,2.9568,0.2876,0.5796
+10x,10,108860,CSV,3,Spark-Uncached / Warm OS Page Cache,11542166,11.0075,1.9847,0.2874,0.5199
+10x,10,108860,PARQUET,1,Spark-Uncached / Warm OS Page Cache,2957379,2.8204,1.851,0.369,0.4627
+10x,10,108860,PARQUET,2,Spark-Uncached / Warm OS Page Cache,2957379,2.8204,1.152,0.3239,0.7917
+10x,10,108860,PARQUET,3,Spark-Uncached / Warm OS Page Cache,2957379,2.8204,2.0102,0.3358,2.1823
+50x,50,544300,CSV,1,Spark-Uncached / Warm OS Page Cache,57863130,55.1826,3.8783,8.7626,10.1864
+50x,50,544300,CSV,2,Spark-Uncached / Warm OS Page Cache,57863130,55.1826,6.3064,0.8403,2.301
+50x,50,544300,CSV,3,Spark-Uncached / Warm OS Page Cache,57863130,55.1826,7.4229,0.7909,1.8844
+50x,50,544300,PARQUET,1,Spark-Uncached / Warm OS Page Cache,14577243,13.9019,8.9777,1.4519,2.1993
+50x,50,544300,PARQUET,2,Spark-Uncached / Warm OS Page Cache,14577243,13.9019,15.6432,0.8212,1.7902
+50x,50,544300,PARQUET,3,Spark-Uncached / Warm OS Page Cache,14577243,13.9019,16.1074,1.7088,9.4206
+100x,100,1088600,CSV,1,Spark-Uncached / Warm OS Page Cache,115764852,110.402,9.3974,1.9362,24.6221
+100x,100,1088600,CSV,2,Spark-Uncached / Warm OS Page Cache,115764852,110.402,30.3545,18.2613,5.8542
+100x,100,1088600,CSV,3,Spark-Uncached / Warm OS Page Cache,115764852,110.402,13.862,22.5215,34.0956
+100x,100,1088600,PARQUET,1,Spark-Uncached / Warm OS Page Cache,29074221,27.7273,30.5238,1.972,3.7912
+100x,100,1088600,PARQUET,2,Spark-Uncached / Warm OS Page Cache,29074221,27.7273,52.7514,2.5344,2.2314
+100x,100,1088600,PARQUET,3,Spark-Uncached / Warm OS Page Cache,29074221,27.7273,39.7687,1.5526,1.6575

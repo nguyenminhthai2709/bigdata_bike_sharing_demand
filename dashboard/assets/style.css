@@ -1,0 +1,194 @@
+/* Giao diện chuyên nghiệp cho Bike Sharing Demand Analysis & Forecasting Dashboard */
+
+.block-container {
+    padding-top: 1.6rem !important;
+    padding-bottom: 2.5rem !important;
+    max-width: 1440px !important;
+}
+
+/* Header Banner */
+.dashboard-header {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+    color: #FFFFFF;
+    padding: 1.5rem 1.8rem;
+    border-radius: 12px;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.dashboard-header .badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.18);
+    color: #7DD3FC;
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.dashboard-header h1 {
+    color: #FFFFFF !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    margin: 0 0 0.35rem 0 !important;
+    padding: 0 !important;
+}
+
+.dashboard-header .subtitle {
+    color: #CBD5E1;
+    font-size: 0.96rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* KPI Card */
+.kpi-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-left: 4px solid #2563EB;
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    height: 100%;
+    min-height: 126px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.kpi-card.accent-emerald {
+    border-left-color: #16A34A;
+}
+
+.kpi-card.accent-teal {
+    border-left-color: #0D9488;
+}
+
+.kpi-card.accent-amber {
+    border-left-color: #D97706;
+}
+
+.kpi-card .kpi-title {
+    color: #64748B;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.3rem;
+}
+
+.kpi-card .kpi-value {
+    color: #0F172A;
+    font-size: 1.48rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+}
+
+.kpi-card .kpi-unit {
+    color: #2563EB;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-left: 0.2rem;
+}
+
+.kpi-card .kpi-desc {
+    color: #64748B;
+    font-size: 0.76rem;
+    line-height: 1.35;
+}
+
+/* Info Box & Section Card */
+.info-panel {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 1.1rem 1.35rem;
+    margin-bottom: 1rem;
+}
+
+.env-notice {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-left: 4px solid #1D4ED8;
+    border-radius: 8px;
+    padding: 0.85rem 1.1rem;
+    color: #1E3A8A;
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+}
+
+/* Architecture Pipeline Step */
+.arch-step {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-top: 3px solid #2563EB;
+    border-radius: 8px;
+    padding: 0.75rem 0.65rem;
+    text-align: center;
+    height: 100%;
+    min-height: 112px;
+}
+
+.arch-step .step-num {
+    display: inline-block;
+    background: #DBEAFE;
+    color: #1E40AF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.12rem 0.5rem;
+    border-radius: 999px;
+    margin-bottom: 0.35rem;
+}
+
+.arch-step .step-title {
+    color: #0F172A;
+    font-size: 0.86rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.arch-step .step-detail {
+    color: #64748B;
+    font-size: 0.74rem;
+    line-height: 1.3;
+}
+
+/* Milestone Timeline Item */
+.milestone-row {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.55rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-badge-done {
+    background: #DCFCE7;
+    color: #166534;
+    border: 1px solid #86EFAC;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status-badge-active {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+

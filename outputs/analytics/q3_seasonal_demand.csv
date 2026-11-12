@@ -1,0 +1,5 @@
+season,season_name,total_records,total_rentals,avg_total_demand,avg_casual,avg_registered,avg_temp_c,avg_humidity_pct
+1,Spring,2686,312498,116.34,15.49,100.85,12.53,56.3
+2,Summer,2733,588282,215.25,47.45,167.8,22.82,60.85
+3,Fall,2733,640662,234.42,52.22,182.2,28.79,64.12
+4,Winter,2734,544034,198.99,28.58,170.41,16.65,66.17
