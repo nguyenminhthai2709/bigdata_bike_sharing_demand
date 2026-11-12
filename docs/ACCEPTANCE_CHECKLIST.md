@@ -89,7 +89,7 @@
 | **ENV-01** | 6 container `langfuse-local-*` giữ nguyên trạng thái hoạt động (`Up` & `healthy`) | **PASS** | `docker ps` xác nhận cả 6 container `Up 44 hours` |
 | **ENV-02** | 2 container Hadoop và 2 container Spark giữ nguyên trạng thái hoạt động (`Up` & `healthy`) | **PASS** | `docker ps` xác nhận `hadoop-namenode`, `hadoop-datanode`, `spark-master`, `spark-worker-1` `Up` |
 | **ENV-03** | Không có tệp dữ liệu gốc (`data/raw/`) hoặc kết quả (`outputs/`) bị sửa đổi ngoài ý muốn | **PASS** | Kiểm toán toàn vẹn 37 artifacts trong Phase G khớp 100% |
-| **GIT-01** | Đóng băng phiên bản Git (`git commit` & `git tag v1.0.0`) | **NOT VERIFIED (CHỜ XÁC NHẬN)** | `git status` ban đầu có các tệp của Milestone 2–7 chưa được commit vào nhánh `main`; theo quy tắc an toàn Giai đoạn A & E, đã tạm dừng trước khi tạo commit/tag để người dùng xác nhận |
+| **GIT-01** | Đóng băng phiên bản Git (`git commit` & `git tag v1.0.0`) | **PASS** | Đã tạo commit mã nguồn `cc141f0` (`cc141f0aa1ad25e8ffc6b3701d8f45b076612ddf`, 89 tệp), commit hồ sơ phát hành và gắn tag `v1.0.0` trên nhánh `main` |
 
 ---
 
@@ -101,4 +101,3 @@
 | **DOC-02** | Báo cáo kiểm thử tích hợp `docs/MILESTONE_7_PHASE_G_REPORT.md` | **PASS** | Tệp tồn tại (`12,114` bytes), ghi nhận đầy đủ kết quả kiểm thử & kiểm toán số liệu |
 | **DOC-03** | Kịch bản trình diễn `docs/DEMO_SCRIPT.md` và hướng dẫn `dashboard/README.md` | **PASS** | Tệp tồn tại (`11,973` bytes & `8,830` bytes), có lệnh `streamlit run dashboard/app.py --server.port 8501` |
 | **DOC-04** | Tài liệu phát hành `docs/RELEASE_NOTES_v1.0.0.md` và `docs/RELEASE_FREEZE_REPORT.md` | **PASS** | Đã tạo đầy đủ trong thư mục `docs/` |
-

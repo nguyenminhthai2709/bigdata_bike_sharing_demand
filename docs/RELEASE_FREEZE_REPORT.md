@@ -1,12 +1,13 @@
 # BÁO CÁO ĐÓNG BĂNG PHIÊN BẢN & CHUẨN BỊ NGHIỆM THU (RELEASE FREEZE REPORT — v1.0.0)
 
 - **Dự án:** Large-Scale Bike Sharing Demand Analysis and Forecasting using Apache Spark (`Phân tích dữ liệu quy mô lớn và dự đoán nhu cầu sử dụng xe đạp chia sẻ bằng Apache Spark`)
-- **Phiên bản mục tiêu:** `v1.0.0`
-- **Repository:** `C:\Users\BOOK PRO\distributed_sys_docker_setup`
-- **Nhánh Git hiện tại (`branch`):** `main`
-- **Commit `HEAD` hiện tại:** `693eccb` (`fix hostname for hadoop`)
-- **Remote:** `origin https://github.com/trung10kg/distributed_sys_docker_setup.git`
-- **Trạng thái Tag `v1.0.0`:** **TẠM DỪNG CHỜ XÁC NHẬN (`PAUSED BY SAFETY RULE`)** do `git status` ban đầu chứa các tệp từ Milestone 2–7 chưa được commit.
+- **Phiên bản phát hành:** `v1.0.0`
+- **Repository Local:** `C:\Users\BOOK PRO\distributed_sys_docker_setup`
+- **Repository GitHub Cá nhân (`personal`):** `https://github.com/nguyenminhthai2709/bigdata_bike_sharing_demand.git`
+- **Remote Gốc (`origin` — Giữ nguyên, không push):** `https://github.com/trung10kg/distributed_sys_docker_setup.git`
+- **Nhánh Git phát hành (`branch`):** `main`
+- **Commit Mã nguồn Phát hành (`v1.0.0` Source Commit):** `cc141f0aa1ad25e8ffc6b3701d8f45b076612ddf` (`cc141f0` — `"release: finalize Bike Sharing Spark project v1.0.0"`)
+- **Trạng thái Tag `v1.0.0`:** **ĐÃ PHÁT HÀNH & ĐỒNG BỘ LÊN REMOTE `personal` (`RELEASED — v1.0.0`)**
 
 ---
 
@@ -35,11 +36,10 @@ Khi kiểm tra `git status` ở Giai đoạn A, working tree chứa toàn bộ c
 | **6. Ứng dụng Dashboard** | `untracked` | `dashboard/` (`app.py`, `config.py`, `data_loader.py`, `README.md`, `assets/`, `components/`, `pages/`) | Mã nguồn ứng dụng Streamlit Dashboard 4 trang hoàn thiện ở Milestone 7 |
 | **7. Tài liệu & Báo cáo** | `untracked` | `docs/` (Toàn bộ báo cáo Milestone 2–7, `DATA_DICTIONARY.md`, `DEMO_SCRIPT.md`, `RELEASE_NOTES_v1.0.0.md`, `ACCEPTANCE_CHECKLIST.md`, `RELEASE_FREEZE_REPORT.md`) | Hệ thống báo cáo kỹ thuật, kịch bản demo và tài liệu phát hành `v1.0.0` |
 
-### 1.3. Lý do Tạm dừng Giai đoạn E (`git commit` & `git tag v1.0.0`)
-Theo đúng điều kiện an toàn bắt buộc của nhiệm vụ:
-> *"Chỉ thực hiện [Giai đoạn E — Tạo phiên bản Git v1.0.0] khi: `git status` ban đầu sạch... Không tự động xóa, ghi đè hoặc commit các thay đổi chưa được xác nhận. Nếu phát hiện thay đổi mã nguồn hoặc dữ liệu chưa rõ mục đích, dừng trước khi tạo tag và báo cáo để người dùng quyết định."*
-
-Do `git status` ban đầu chứa các tệp chưa commit của Milestone 2–7 nêu trên, tôi **chưa thực hiện `git commit` và chưa gắn tag `v1.0.0`** để chờ bạn xác nhận phương án đóng gói Git (xem Mục 5 bên dưới).
+### 1.3. Kết quả Đóng gói Git có Chọn lọc (`v1.0.0`)
+- Đã kiểm tra và thực hiện staging có chọn lọc đúng **89 tệp** (`hadoop/hadoop.env`, `MILESTONE_2_PRECHECK.md`, 9 tệp Spark jobs trong `compute/spark/jobs/`, 13 tệp mã nguồn trong `dashboard/`, 21 tệp báo cáo trong `docs/` và 44 tệp kết quả trong `outputs/`).
+- Đã chủ đích loại trừ `backups/`, `data/` (dữ liệu Kaggle gốc) và 6 tệp bytecode `.pyc` trong `__pycache__/`.
+- Đã tạo commit mã nguồn phát hành: **`cc141f0aa1ad25e8ffc6b3701d8f45b076612ddf`** (`cc141f0` — `"release: finalize Bike Sharing Spark project v1.0.0"`), tiếp theo là commit cập nhật hồ sơ phát hành (`"docs: finalize v1.0.0 release records"`) và gắn annotated tag **`v1.0.0`**.
 
 ---
 
@@ -54,14 +54,14 @@ Tất cả các tài liệu bàn giao đã được xác minh tồn tại, đầ
 | 3 | `docs/DEMO_SCRIPT.md` | `11,973 bytes` | **PASS** (Kịch bản trình diễn 8–12 phút) |
 | 4 | `dashboard/README.md` | `8,830 bytes` | **PASS** (Hướng dẫn chạy `streamlit run dashboard/app.py --server.port 8501`) |
 | 5 | `docs/RELEASE_NOTES_v1.0.0.md` | Đã tạo mới | **PASS** (Ghi chú phát hành `v1.0.0` đầy đủ 10 mục) |
-| 6 | `docs/ACCEPTANCE_CHECKLIST.md` | Đã tạo mới | **PASS** (31 tiêu chí nghiệm thu chia theo 9 nhóm) |
+| 6 | `docs/ACCEPTANCE_CHECKLIST.md` | Đã tạo mới | **PASS** (31/31 tiêu chí nghiệm thu đạt PASS) |
 | 7 | `docs/RELEASE_FREEZE_REPORT.md` | Đã tạo mới | **PASS** (Báo cáo đóng băng phiên bản & bộ Q&A bảo vệ đồ án) |
 
 ---
 
-## 3. Tổng hợp Trạng thái Nghiệm thu (`PASS` / `NOT VERIFIED`)
+## 3. Tổng hợp Trạng thái Nghiệm thu (`31/31 PASS`)
 
-- **30 / 31 tiêu chí trong `docs/ACCEPTANCE_CHECKLIST.md` đạt `PASS` (có đầy đủ bằng chứng thực nghiệm):**
+- **Toàn bộ 31 / 31 tiêu chí trong `docs/ACCEPTANCE_CHECKLIST.md` đạt `PASS` (100% có bằng chứng thực nghiệm):**
   - Kiến trúc & Hạ tầng (`INF-01` → `INF-04`): **PASS**
   - Dataset & Chất lượng dữ liệu (`DAT-01` → `DAT-04`): **PASS**
   - EDA & Spark SQL (`EDA-01` → `EDA-03`): **PASS**
@@ -69,10 +69,8 @@ Tất cả các tài liệu bàn giao đã được xác minh tồn tại, đầ
   - Big Data Benchmark (`BM-01` → `BM-04`): **PASS**
   - Streamlit Dashboard 4 trang (`UI-01` → `UI-04`): **PASS**
   - Integration & Performance Testing (`INT-01` → `INT-03`): **PASS**
-  - An toàn môi trường Docker/Langfuse/Hadoop/Spark (`ENV-01` → `ENV-03`): **PASS**
+  - An toàn môi trường Docker/Langfuse/Hadoop/Spark & Git Release (`ENV-01` → `ENV-03`, `GIT-01`): **PASS**
   - Tài liệu bàn giao (`DOC-01` → `DOC-04`): **PASS**
-- **1 / 31 tiêu chí ở trạng thái `NOT VERIFIED (CHỜ XÁC NHẬN)`:**
-  - `GIT-01` (Tạo Git commit & tag `v1.0.0`): Đang chờ người dùng xác nhận phạm vi các tệp cần đưa vào commit phát hành.
 
 ---
 
@@ -132,27 +130,19 @@ Tất cả các tài liệu bàn giao đã được xác minh tồn tại, đầ
 
 ---
 
-## 5. Hướng dẫn Đóng băng Git `v1.0.0` (Chờ Người dùng Xác nhận)
+## 5. Hồ sơ Đóng băng Git `v1.0.0` & Đồng bộ GitHub Cá nhân (`personal`)
 
-Khi bạn đã kiểm tra và đồng ý đưa các tệp của dự án vào phiên bản phát hành `v1.0.0`, bạn có thể xác nhận để tôi thực thi (hoặc bạn trực tiếp chạy) một trong hai phương án sau:
-
-- **Phương án 1 (Khuyến nghị — Đóng gói toàn bộ dự án Milestone 2–7 vào tag `v1.0.0`):**
-  ```powershell
-  git add hadoop/hadoop.env compute/ dashboard/ docs/ outputs/ data/ MILESTONE_2_PRECHECK.md
-  git commit -m "release: finalize Bike Sharing Spark project v1.0.0"
-  git tag -a v1.0.0 -m "Bike Sharing Demand Analysis and Forecasting v1.0.0"
-  ```
-- **Phương án 2 (Chỉ commit tài liệu phát hành nếu bạn muốn tự quản lý các thư mục khác riêng):**
-  ```powershell
-  git add docs/RELEASE_NOTES_v1.0.0.md docs/ACCEPTANCE_CHECKLIST.md docs/RELEASE_FREEZE_REPORT.md
-  git commit -m "release: finalize Bike Sharing Spark project v1.0.0"
-  git tag -a v1.0.0 -m "Bike Sharing Demand Analysis and Forecasting v1.0.0"
-  ```
+- **Repository GitHub Cá nhân (`personal`):** `https://github.com/nguyenminhthai2709/bigdata_bike_sharing_demand.git`
+- **Remote Gốc (`origin`):** `https://github.com/trung10kg/distributed_sys_docker_setup.git` (**Giữ nguyên tuyệt đối, không push lên `origin`**)
+- **Nhánh phát hành (`branch`):** `main`
+- **Commit Mã nguồn (`89` tệp):** `cc141f0aa1ad25e8ffc6b3701d8f45b076612ddf` (`cc141f0` — `"release: finalize Bike Sharing Spark project v1.0.0"`)
+- **Commit Hồ sơ Phát hành:** `"docs: finalize v1.0.0 release records"` (chứa cập nhật cuối cùng của `docs/RELEASE_FREEZE_REPORT.md` và `docs/ACCEPTANCE_CHECKLIST.md`)
+- **Tag phát hành (`Annotated Tag`):** `v1.0.0` (`"Bike Sharing Demand Analysis and Forecasting v1.0.0"`) trỏ tới commit cuối cùng trên nhánh `main`.
+- **Các thư mục loại trừ an toàn (không đưa lên GitHub):** `data/`, `backups/`, `dashboard/__pycache__/`, `dashboard/components/__pycache__/`.
 
 ---
 
 ## 6. Kết luận về Trạng thái Sẵn sàng Trình diễn (Demo Readiness Conclusion)
 
 - **Trạng thái kỹ thuật:** **SẴN SÀNG 100% (`READY FOR DEMO & ACCEPTANCE`)**.
-- Toàn bộ 4 trang của **Streamlit Dashboard**, 37 tệp kết quả trong `outputs/`, các dịch vụ **Hadoop HDFS**, **Apache Spark**, **Langfuse** và bộ tài liệu bàn giao (`FINAL REPORT`, `PHASE G REPORT`, `DEMO SCRIPT`, `RELEASE NOTES`, `ACCEPTANCE CHECKLIST`) đều đã hoàn tất, nhất quán tuyệt đối và sẵn sàng phục vụ trình diễn nghiệm thu.
-
+- Toàn bộ 4 trang của **Streamlit Dashboard**, 37 tệp kết quả trong `outputs/`, các dịch vụ **Hadoop HDFS**, **Apache Spark**, **Langfuse** và bộ tài liệu bàn giao (`FINAL REPORT`, `PHASE G REPORT`, `DEMO SCRIPT`, `RELEASE NOTES`, `ACCEPTANCE CHECKLIST`, `RELEASE FREEZE REPORT`) đều đã hoàn tất, nhất quán tuyệt đối và sẵn sàng phục vụ trình diễn nghiệm thu.
